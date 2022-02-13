@@ -20,3 +20,10 @@ def mul(a,b):
 print(add(3,4))
 print(sub(5,2))
 print(mul(2,3))
+
+
+'''
+add 3 4 = 7
+sub 5 2 = 3
+mul 2 3 = 6
+'''
