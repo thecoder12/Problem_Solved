@@ -5,9 +5,9 @@ from collections import defaultdict
 from queue import Queue
 
 final = defaultdict(lambda: defaultdict())
-all_obj = list()
-adj_list = defaultdict(lambda: defaultdict())
-ss = ''
+all_files = list()
+# adj_list = defaultdict(lambda: defaultdict())
+msg = ''
 
 class Node:
     def __init__(self, down_rev, filename, rev) -> None:
@@ -29,19 +29,10 @@ def parser():
             f['down_rev'] = down_rev
             f['filename'] = filename
             final[down_rev] = f
-            # pprint(final)
-            # exit()
-            # final[filename]['rev'] = rev
-            # final[filename]['down_rev'] = down_rev
-            # adj_list = final
-            # n = Node(down_rev, filename, rev)
-            # print(n.__dict__)
-            # all_obj.append(n)
-            # exit()
+            all_files.append(filename)
 
 
 def get_revision_str(f_data):
-    # print(f_data)
     m = re.match(r".*?# revision identifiers.*?revision = \'(.*?)\'.*down_revision =(.*?)branch_labels", f_data,re.M|re.S)
     if m:
         d_rev = m.group(2)
@@ -59,11 +50,8 @@ def find_path():
     bfs_traversal_output = []
     bfs_traversal_rev_output = []
     queue = Queue()
-    # pprint(final)
-    # exit()
 
     for node in final.keys():
-        # print(node)
         visited[node] = False
         level[node] = -1 #inf
         parent[node] = None
@@ -79,7 +67,6 @@ def find_path():
         bfs_traversal_output.append(u)
 
         for v in final[u]['rev']:
-            # print(v)
             bfs_traversal_rev_output.append(v)
             if v in final.keys():
                 if not visited[v]:
@@ -89,18 +76,21 @@ def find_path():
                     queue.put(v)
             else:
                 pass
-    # print(bfs_traversal_output)
-    ss = 'Migration files would be applied in below sequence \n'
+    msg = 'Migration files would be applied in below sequence \n'
+    visited_files = []
     for i,path in enumerate(bfs_traversal_output):
-        # print(final[path]['filename'])
+        visited_files.append(final[path]['filename'])
         '''Migration files would be applied in below sequence
             a(file1.py) -> b(file2.py) -> c(file4.py) -> d(file3.py)'''
-        ss += bfs_traversal_rev_output[i] + '(' + final[path]['filename'] + ') -> ' 
-    ss = ss[:-4]
-    print(ss)
+        msg += bfs_traversal_rev_output[i] + '(' + final[path]['filename'] + ') -> ' 
+    msg = msg[:-4]
+    visited_nodes = final.keys()
+    pprint(all_files)
+    pprint(visited_files)
+    non_visited_files = list(set(all_files) - set(visited_files))
+    msg += '\nNon visited File/s ::{}'.format(non_visited_files)
+    print(msg)
        
 
 parser()
-# pprint(final)
-# pprint(all_obj)
 find_path()
