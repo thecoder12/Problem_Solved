@@ -1,4 +1,5 @@
 '''
+https://www.geeksforgeeks.org/count-strings-can-formed-using-b-c-given-constraints/
 Input : n = 3 
 Output : 19 
 Below strings follow given constraints:
